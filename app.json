@@ -1,0 +1,17 @@
+{
+  "name": "AppEstat",
+  "displayName": "AppEstat",
+  "expo": {
+    "name": "AppEstat",
+    "slug": "AppEstat",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
