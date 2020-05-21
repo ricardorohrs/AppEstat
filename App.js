@@ -114,7 +114,30 @@ const styles = StyleSheet.create({
 import React, { Component } from 'react';
 import { Text, Button, StyleSheet, Alert, View, FlatList, TextInput } from 'react-native'
 
-var SampleArray = [1, 2, 3, 4, 5];
+const SampleArray = [1,2,3,4,5,6,7,8,9,0,1,5,2,3,6,4,9,7,8,1,2,3,4,6,9,5,2,3,1,7,0,8,5,9,4,6,3,1,2,0,7,8,4,1,5,2,3,0,6,9,2,3,4,5,0,1,9,4,2,1,6];
+
+const data = [
+  { key: 'Dado' },
+  { key: 'xi' },
+  { key: 'XI' }, 
+  { key: 'fr' }, 
+  { key: 'Fr' },
+  { key: '%' }
+];
+
+const numColumns = 6;
+
+const formatData = (data, numColumns) => {
+  const numberOfFullRows = Math.floor(data.length / numColumns);
+
+  let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
+  while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
+    data.push({ key: 'blank-${numberOfElementsLastRow}', empty: true });
+    numberOfElementsLastRow++;
+  }
+
+  return data;
+};
 
 export default class MainActivity extends Component {
   _onPressButton() {
@@ -140,26 +163,21 @@ export default class MainActivity extends Component {
       <Text>{item}</Text>
     </View>
   );
+  
+  renderItem = ({ item, index }) => {
+    if (item.empty === true) {
+      return <View style={[styles.item]} />;
+    }
+    return (
+      <View
+        style={styles.item}
+      >
+        <Text style={styles.itemText}>{item.key}</Text>
+      </View>
+    );
+  };
 
  render() {
-/* NÃO FUNCIONA  function rendertodo() {
-    for (todo of todos) {
-      var todoElement = document.createElement('li');
-      var todoText = document.createTextNode(todo);
-
-      todoElement.appendChild(todoText);
-      listElement.appendChild(todoElement);
-    }
-  }
-
-  function addtodo() {
-    var todoText = inputElement.value;
-
-    todos.push(todoText);
-    inputElement.value = '';
-    rendertodo();
-  } NÃO FUNCIONA */
-   
    return (
       <View style={styles.MainContainer}>
           <TextInput
@@ -173,6 +191,14 @@ export default class MainActivity extends Component {
           data={SampleArray}
           renderItem = { ({item}) => <Text style={styles.textoItem}>{item}</Text>}
         />
+
+        <FlatList
+          data={formatData(data, numColumns)}
+          style={styles.container}
+          renderItem={this.renderItem}
+          numColumns={numColumns}
+        />
+
       </View>
    );
  }
@@ -200,5 +226,18 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     margin: 25
+  },
+  container: {
+ //   marginBottom: 300
+  },
+  item: {
+    backgroundColor: '#333',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    margin: 1,
+  },
+  itemText: {
+    color: '#fff',
   },
 });
