@@ -5,7 +5,7 @@ import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-ta
 var SampleArray = [1,2,10,3,4,5,6,7,8,9,0,1,5,2,3,6,4,9,7,8,1,2,3,4,6,9,5,2,3,1,7,0,8,5,9,4,6,3,1,2,0,7,8,4,1,10,5,2,3,0,6,9,2,3,4,5,0,1,9,4,
                       12,16,15,17,19,20,11,13,17,19,12,14,13,18,17,20,16,11,10,19,18,13,16,15,10,17,14,20,12,11,3,6,9,8,7,4,2,1,10,20,11,2,1,6];
 
-const data = [
+/* const data = [
   { key: 'Dado' },
   { key: 'xi' },
   { key: 'XI' }, 
@@ -13,13 +13,7 @@ const data = [
   { key: 'Fr' },
   { key: '%' }
 ];
-
-/* const max = SampleArray.reduce(function(a, b) {
-  return Math.max(a, b);
-});
-const linhas = max/10;
-//Alert.alert(linhas.toString());
-//Alert.alert(max.toString()); */
+ */
 
 const numColumns = 6;
 
@@ -44,35 +38,109 @@ export default class MainActivity extends Component {
        super(props)
        this.state = {
         HeadTable: ['Dado', 'xi', 'Xi', 'fi', 'Fi', 'fr', 'Fr', '%'],
-        DataTable: [
-          [1,2,0,3,4,2,6,7],
-          [5,6,7,8,9,7,8,1],
-          [0,1,5,2,3,0,2,6],
-          [6,4,9,7,8,4,3,1],
-          [1,2,3,4,6,1,7,6],
-        ], //valores teste
+        DataTable: [['Dado', 'xi', 'Xi', 'fi', 'Fi', 'fr', 'Fr', '%']],
         Holder: ''
        }
   }
 
   AddItemsToArray = () => {
-      //Adding Items To Array.
+      // Adding Items To Array.
       SampleArray.push(this.state.Holder.toString());
       // Showing the complete Array on Screen Using Alert.
-      // Alert.alert(SampleArray.toString());
+      //Alert.alert(SampleArray.toString());
   }
 
   calculate = () => {
-    let k = Math.round((1 + 3.3 * Math.log10(SampleArray.length)));
-    let max = Math.max(...SampleArray);
-    let min = Math.min(...SampleArray);
+    const data = SampleArray.sort((a,b)=>{
+      return a - b;
+  });
+    let k = Math.round((1 + 3.3 * Math.log10(data.length)));
+    let max = Math.max(...data);
+    let min = Math.min(...data);
     let A = max - min;
     let intervalo = (A/k).toFixed(4);
 
-    Alert.alert(intervalo.toString());
+    let inicio;
+    let final;
+    let intervalos = [];
+    
+    for (let i = 0; i<k; i++) {
+      inicio = min + i * intervalo;
+      final = min + (i+1) * intervalo;
+      intervalos.push([inicio,final]);
+    }
+
+    let xi = [0,0,0,0,0,0,0,0];
+    let intervaloAtual = 0;
+    let ultimaIteracao = 0;
+
+     do {
+      for ( let i = ultimaIteracao; i<data.length; i++ ) {
+        if (i===0) {
+          if ( data[i] < intervalos[intervaloAtual][1])
+			      xi[intervaloAtual]++;
+		      else	{
+			      ultimaIteracao = i;
+			      intervaloAtual++;
+			      break;
+          }
+        } else if (i===data.length-1) {
+          if ( data[i] > intervalos[intervaloAtual][0] && data[i] <= intervalos[intervaloAtual][1])
+			      xi[intervaloAtual]++;
+		      else {
+			      ultimaIteracao = i;
+			      intervaloAtual++;
+			      break;
+          }
+        } else {
+          if ( data[i] >= intervalos[intervaloAtual][0] && data[i] < intervalos[intervaloAtual][1])
+			      xi[intervaloAtual]++;
+		      else {
+			      ultimaIteracao = i;
+			      intervaloAtual++;
+            break;
+          }
+        }
+      }
+    } while(intervaloAtual < intervalos.length);
+
+    let fr = [];
+    let Xi = [];
+    let Fr = [];
+
+    for (let i = 0; i<xi.length; i++) {
+      fr.push(xi[i]/data.length);
+      if (i===0) {
+        Xi.push(xi[i]);
+        Fr.push(fr[i]);
+      } else {
+        Xi.push(Xi[i-1] + xi[i]);
+        Fr.push(Fr[i-1] + fr[i]);
+      }
+    }
+
+    console.log('   ');
+    console.log('Xi', Xi);
+    console.log('fr', fr);
+    console.log('Fr', Fr);
+/*     const localDataTable = this.state.DataTable;
+
+    for (let i = 0; i<intervalos; i++) {
+      let aux = intervalos[i][0] + '---' + intervalos[i][1];
+      localDataTable.push([aux,0,0,0,0,0,0,0]);
+    }
+
+    this.setState({DataTable: localDataTable}); */
     
 
-
+/*     intervalos.forEach((item)=>{
+      let aux = item[0] + '---' + item[1];
+      this.state.DataTable.push([aux,0,0,0,0,0,0,0]);
+    }); */
+    
+   console.log(intervalos); 
+    
+//    Alert.alert(intervalo.toString());  
   }
 
 /*    renderItem = ({item}) => (
@@ -81,14 +149,12 @@ export default class MainActivity extends Component {
     </View>
   ); */
 
-  renderItem = ({ item, index }) => {
+  renderItem = ({ item }) => {
     if (item.empty === true) {
       return <View style={[styles.item]} />;
     }
     return (
-      <View
-        style={styles.item}
-      >
+      <View style={styles.item}>
         <Text style={styles.itemText}>{item.key}</Text>
       </View>
     );
@@ -105,10 +171,10 @@ export default class MainActivity extends Component {
           />
           <Button title="Adicionar valor" onPress={this.AddItemsToArray}/>
 
-        <FlatList
+{/*         <FlatList
           data={SampleArray}
           renderItem = { ({item}) => <Text style={styles.textoItem}>{item}</Text>}
-        />
+        /> */}
 
         <Button title="Calcular" onPress={this.calculate}/>
 
@@ -148,12 +214,6 @@ const styles = StyleSheet.create({
     color: "#000",
     padding: 25,
     borderBottomWidth: 2
-  },
-  buttonContainer: {
-    margin: 25
-  },
-  container: {
- //   marginBottom: 300
   },
   item: {
     backgroundColor: '#333',
