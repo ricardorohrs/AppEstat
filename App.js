@@ -1,39 +1,16 @@
 import React, { Component } from 'react';
-import { Text, Button, StyleSheet, Alert, View, FlatList, TextInput } from 'react-native'
+import { Text, Button, StyleSheet, Alert, View, FlatList, ScrollView, TextInput } from 'react-native';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 
-var SampleArray = [1,2,10,3,4,5,6,7,8,9,0,1,5,2,3,6,4,9,7,8,1,2,3,4,6,9,5,2,3,1,7,0,8,5,9,4,6,3,1,2,0,7,8,4,1,10,5,2,3,0,6,9,2,3,4,5,0,1,9,4,
-                      12,16,15,17,19,20,11,13,17,19,12,14,13,18,17,20,16,11,10,19,18,13,16,15,10,17,14,20,12,11,3,6,9,8,7,4,2,1,10,20,11,2,1,6];
-
-/* const data = [
-  { key: 'Dado' },
-  { key: 'xi' },
-  { key: 'XI' }, 
-  { key: 'fr' }, 
-  { key: 'Fr' },
-  { key: '%' }
-];
- */
-
-/* const numColumns = 6;
-
-const formatData = (data, numColumns) => {
-  const numberOfFullRows = Math.floor(data.length / numColumns);
-
-  let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
-  while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
-    data.push({ key: 'blank-${numberOfElementsLastRow}', empty: true });
-    numberOfElementsLastRow++;
-  }
-
-  return data;
-}; */
+var SampleArray = [1,2,10,3,4,4,2,11,10,16,5,6,7,8,9,0,1,5,2,3,6,4,9,7,8,1,2,3,4,6,9,5,2,3,1,7,0,8,5,9,4,6,3,1,2,0,7,8,4,1,10,5,2,3,0,6,9,2,3,4,5,0,1,9,4,
+                      12,16,15,17,19,20,11,13,17,14,9,8,7,12,15,19,18,16,17,20,19,12,14,13,18,17,20,16,11,10,19,18,13,16,15,10,17,14,20,12,11,3,6,9,8,7,4,2,1,10,20,11,2,1,6];
 
 export default class MainActivity extends Component {
   constructor(props) {
        super(props)
        this.state = {
-        HeadTable: ['Dado', 'xi', 'Xi', 'fr', 'Fr', '%'],
+        HeadTable: ['Dados', 'xi', 'Xi', 'fr', 'Fr', '%'],
+        widthArr: [105, 40, 45, 100, 100, 100],
         DataTable: [],
         Holder: ''
        }
@@ -41,6 +18,7 @@ export default class MainActivity extends Component {
 
   AddItemsToArray = () => {
       SampleArray.push(this.state.Holder.toString());
+      console.log('Valor adicionado!');
       //Alert.alert(SampleArray.toString());
   }
 
@@ -62,9 +40,9 @@ export default class MainActivity extends Component {
     let Xi = [];
     let Fr = [];
     let percent = [];
+    let array = [];
     let inicio;
     let final;
-    let aux = [];
     
     for (let i = 0; i < k; i++) {
       inicio = min + i * intervalo;
@@ -73,9 +51,9 @@ export default class MainActivity extends Component {
     }
 
     do {
-    for ( let i = ultimaIteracao; i<data.length; i++ ) {
+    for (let i = ultimaIteracao; i <= data.length; i++ ) {
       if (i===0) {
-        if ( data[i] < intervalos[intervaloAtual][1])
+        if (data[i] < intervalos[intervaloAtual][1])
           xi[intervaloAtual]++;
         else	{
           ultimaIteracao = i;
@@ -91,7 +69,7 @@ export default class MainActivity extends Component {
           break;
         }
       } else {
-        if ( data[i] >= intervalos[intervaloAtual][0] && data[i] < intervalos[intervaloAtual][1])
+        if ( data[i] >= intervalos[intervaloAtual][0] && data[i] <= intervalos[intervaloAtual][1])
           xi[intervaloAtual]++;
         else {
           ultimaIteracao = i;
@@ -102,7 +80,7 @@ export default class MainActivity extends Component {
     }
     } while(intervaloAtual < intervalos.length);
 
-    for (let i = 0; i<xi.length; i++) {
+    for (let i = 0; i < k; i++) {
       fr.push(xi[i]/data.length);
       percent.push((fr[i])*100);
       if (i===0) {
@@ -121,15 +99,14 @@ export default class MainActivity extends Component {
     console.log('fr', fr);
     console.log('Fr', Fr);
     console.log('%', percent);
-    console.log(intervalos); 
+    console.log(intervalos);
+    console.log(data); 
 
     for (let i = 0; i<k; i++) {
       intervalos[i].splice(1, 0, " ... ");
     }
 
-    let array = [];
-
-    for (let i=0; i<xi.length; i++) {
+    for (let i=0; i<k; i++) {
       array.push([intervalos[i], xi[i], Xi[i], fr[i].toFixed(4), Fr[i].toFixed(4), percent[i].toFixed(2)])
     }
 
@@ -165,56 +142,50 @@ export default class MainActivity extends Component {
 
         <Button title="Calcular" onPress={this.calculate}/>
 
-{/*         <FlatList
-          data={formatData(data, numColumns)}
-          style={styles.container}
-          renderItem={this.renderItem}
-          numColumns={numColumns}
-        /> */}
-
-        <Table borderStyle={{borderWidth: 1, borderColor: '#333'}}>
-          <Row data={state.HeadTable}/>
-          {this.state.DataTable.map((rowData, index) => (
-            <Row
-              key={index}
-              data={rowData}
-            />
-          ))}
-        </Table>
-
+        <ScrollView horizontal={true}>
+          <Table borderStyle={{borderWidth: 1.5, borderColor: '#000'}}>
+            <Row data={state.HeadTable} widthArr={state.widthArr} style={styles.header} textStyle={{color: '#fff', textAlign: 'center', fontWeight: 'bold', padding: 5}}/>
+            {this.state.DataTable.map((rowData, index) => (
+              <Row
+                key={index}
+                data={rowData}
+                widthArr={state.widthArr}
+                style={[styles.row, index%2 && {backgroundColor: '#DDDDFF'}]}
+                textStyle={{textAlign: 'center', padding: 7, fontSize: 17,}}
+              />
+            ))}
+          </Table>
+        </ScrollView>
       </View>
    );
  }
 }
 
 const styles = StyleSheet.create({
-
   MainContainer: {
-    flex:1,
+ //   flex:1,
     justifyContent: 'center',
     backgroundColor: "#f4f4f4",
     margin: 15
   },
-  input: {
-    margin: 5,
-    width: 250,
-    borderColor: "#c3c3c3",
-    borderWidth: 1
+  header: {
+    backgroundColor: '#333',
+    marginTop: 5
   },
-  textoItem: {
+/*   textoItem: {
     fontSize: 20,
     color: "#000",
     padding: 25,
     borderBottomWidth: 2
-  },
-  item: {
+  }, */
+/*   item: {
     backgroundColor: '#333',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
     margin: 1,
-  },
-  itemText: {
+  }, */
+/*   itemText: {
     color: '#fff',
-  },
+  }, */
 });
