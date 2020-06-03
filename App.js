@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Text, Button, StyleSheet, Alert, View, FlatList, ScrollView, TextInput } from 'react-native';
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import { Text, Button, StyleSheet, Alert, View, Image, ScrollView, TextInput } from 'react-native';
+import { Table, Row, Rows } from 'react-native-table-component';
 
-var SampleArray = [1,2,10,3,4,4,2,11,10,16,5,6,7,8,9,0,1,5,2,3,6,4,9,7,8,1,2,3,4,6,9,5,2,3,1,7,0,8,5,9,4,6,3,1,2,0,7,8,4,1,10,5,2,3,0,6,9,2,3,4,5,0,1,9,4,
-                      12,16,15,17,19,20,11,13,17,14,9,8,7,12,15,19,18,16,17,20,19,12,14,13,18,17,20,16,11,10,19,18,13,16,15,10,17,14,20,12,11,3,6,9,8,7,4,2,1,10,20,11,2,1,6];
+var SampleArray = [];
 
 export default class MainActivity extends Component {
   constructor(props) {
@@ -19,11 +18,13 @@ export default class MainActivity extends Component {
   AddItemsToArray = () => {
       SampleArray.push(this.state.Holder.toString());
       console.log('Valor adicionado!');
+      this.setState({SampleArray: SampleArray});
       //Alert.alert(SampleArray.toString());
   }
 
   calculate = () => {
-    const data = SampleArray.sort((a,b)=>{
+    let novo = SampleArray.toString().split(",");
+    const data = novo.sort((a,b)=>{
       return a - b;
     });
 
@@ -43,7 +44,12 @@ export default class MainActivity extends Component {
     let array = [];
     let inicio;
     let final;
-    
+
+    if (data.length === 0) {
+      Alert.alert('Antes de calcular, você deve inserir ao menos 2 valores!');
+      return;
+    }
+
     for (let i = 0; i < k; i++) {
       inicio = min + i * intervalo;
       final = min + (i+1) * intervalo;
@@ -107,7 +113,7 @@ export default class MainActivity extends Component {
     }
 
     for (let i=0; i<k; i++) {
-      array.push([intervalos[i], xi[i], Xi[i], fr[i].toFixed(4), Fr[i].toFixed(4), percent[i].toFixed(2)])
+      array.push([intervalos[i], xi[i], Xi[i], fr[i].toFixed(4), Fr[i].toFixed(4), percent[i].toFixed(2)+'%'])
     }
 
     this.setState({DataTable: array});
@@ -115,19 +121,24 @@ export default class MainActivity extends Component {
 
   renderItem = ({ item }) => {
     if (item.empty === true) {
-      return <View style={[styles.item]} />;
+      return <View/>;
     }
     return (
-      <View style={styles.item}>
-        <Text style={styles.itemText}>{item.key}</Text>
-      </View>
+        <Text>{item.key}</Text>
     );
+  };
+
+  valores = () => {
+    Alert.alert(SampleArray.toString());
   };
 
  render() {
   const state = this.state;
    return (
-      <View style={styles.MainContainer}>
+    <View>
+      <ScrollView>
+        <Image source = {require('C:/Users/ricar/AppEstat/logo-ufsm.png')} style={styles.logo}/>
+        <View style={styles.MainContainer}>
           <TextInput
               placeholder="Digite o valor"
               onChangeText={TextInputValue => this.setState({Holder: TextInputValue})}
@@ -135,12 +146,13 @@ export default class MainActivity extends Component {
           />
           <Button title="Adicionar valor" onPress={this.AddItemsToArray}/>
 
-{/*         <FlatList
-          data={SampleArray}
-          renderItem = { ({item}) => <Text style={styles.textoItem}>{item}</Text>}
-        /> */}
+        <View style={styles.botao}>  
+          <Button title="Ver valores inseridos" onPress={this.valores}/>
+        </View>
 
-        <Button title="Calcular" onPress={this.calculate}/>
+        <View style={styles.botao}>
+         <Button title="Calcular" onPress={this.calculate}/>
+        </View>
 
         <ScrollView horizontal={true}>
           <Table borderStyle={{borderWidth: 1.5, borderColor: '#000'}}>
@@ -156,36 +168,30 @@ export default class MainActivity extends Component {
             ))}
           </Table>
         </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
+    </View>
    );
  }
 }
 
 const styles = StyleSheet.create({
   MainContainer: {
- //   flex:1,
+    marginTop: -25,
+    backgroundColor: '#f4f4f4',
     justifyContent: 'center',
-    backgroundColor: "#f4f4f4",
     margin: 15
   },
   header: {
     backgroundColor: '#333',
     marginTop: 5
   },
-/*   textoItem: {
-    fontSize: 20,
-    color: "#000",
-    padding: 25,
-    borderBottomWidth: 2
-  }, */
-/*   item: {
-    backgroundColor: '#333',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    margin: 1,
-  }, */
-/*   itemText: {
-    color: '#fff',
-  }, */
+  botao: {
+    marginTop: 5
+  },
+  logo: {
+    width: 125,
+    alignSelf: 'center',
+    resizeMode: 'contain'
+  }
 });
