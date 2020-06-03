@@ -8,8 +8,5 @@ Aplicativo de estatística descritiva sobre análise exploratória de dados.
 2. npm install
 3. windows + r e digite "cmd"
 4. encontre a pasta AppEstat pelo terminal (... cd AppEstat)
-5. npm start (npm run android/ios caso haja um emulador)
-
-
-
-# Ricardo E. Röhrs
+5. npm install
+6. npm start (npm run android/ios caso haja um emulador)
