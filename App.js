@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Text, Button, StyleSheet, Alert, View, Image, ScrollView, TextInput } from 'react-native';
-import { Table, Row, Rows } from 'react-native-table-component';
+import { Button, StyleSheet, Alert, View, Image, ScrollView, TextInput } from 'react-native';
+import { Table, Row } from 'react-native-table-component';
 
 var SampleArray = [];
 
@@ -21,6 +21,10 @@ export default class MainActivity extends Component {
       this.setState({SampleArray: SampleArray});
       //Alert.alert(SampleArray.toString());
   }
+
+  valores = () => {
+    Alert.alert(SampleArray.toString());
+  };
 
   calculate = () => {
     let novo = SampleArray.toString().split(",");
@@ -59,7 +63,7 @@ export default class MainActivity extends Component {
     do {
     for (let i = ultimaIteracao; i <= data.length; i++ ) {
       if (i===0) {
-        if (data[i] < intervalos[intervaloAtual][1])
+        if (data[i] <= intervalos[intervaloAtual][1])
           xi[intervaloAtual]++;
         else	{
           ultimaIteracao = i;
@@ -119,18 +123,17 @@ export default class MainActivity extends Component {
     this.setState({DataTable: array});
   }
 
-  renderItem = ({ item }) => {
-    if (item.empty === true) {
-      return <View/>;
-    }
-    return (
-        <Text>{item.key}</Text>
-    );
-  };
+  zerar = () => {
+    SampleArray = [];
+    this.setState({DataTable:[]});
+  }
 
-  valores = () => {
-    Alert.alert(SampleArray.toString());
-  };
+/*   renderItem = ({ item }) => {
+    if (item.empty === true)
+      return <View/>;
+
+    return (<Text>{item.key}</Text>);
+  }; */
 
  render() {
   const state = this.state;
@@ -168,6 +171,11 @@ export default class MainActivity extends Component {
             ))}
           </Table>
         </ScrollView>
+
+        <View style={styles.botao}>
+         <Button title="Calcular Novamente" onPress={this.zerar}/>
+        </View>
+
         </View>
       </ScrollView>
     </View>
