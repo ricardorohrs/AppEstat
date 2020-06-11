@@ -9,7 +9,7 @@ export default class MainActivity extends Component {
        super(props)
        this.state = {
         HeadTable: ['Dados', 'xi', 'Xi', 'fr', 'Fr', '%'],
-        widthArr: [105, 40, 45, 100, 100, 100],
+        widthArr: [115, 40, 45, 100, 100, 100],
         DataTable: [],
         Holder: ''
        }
@@ -49,8 +49,8 @@ export default class MainActivity extends Component {
     let inicio;
     let final;
 
-    if (data.length === 0) {
-      Alert.alert('Antes de calcular, você deve inserir ao menos 2 valores!');
+    if (data.length < 4) {
+      Alert.alert('Adicione mais valores para funcionar!');
       return;
     }
 
@@ -113,7 +113,11 @@ export default class MainActivity extends Component {
     console.log(data); 
 
     for (let i = 0; i<k; i++) {
-      intervalos[i].splice(1, 0, " ... ");
+      if (i==k-1) {
+        intervalos[i].splice(1, 0, " | ... | ");
+      } else {
+        intervalos[i].splice(1, 0, " | ... ");
+      }
     }
 
     for (let i=0; i<k; i++) {
