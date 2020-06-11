@@ -1,17 +1,22 @@
 {
-  "name": "AppEstat",
-  "displayName": "AppEstat",
+  "name": "(ARM)2Stat",
+  "displayName": "(ARM)2Stat",
   "expo": {
     "name": "AppEstat",
     "slug": "AppEstat",
     "version": "1.0.0",
     "platforms": [
       "ios",
-      "android",
-      "web"
+      "android"
     ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./android/app/src/main/res/mipmap-hdpi/icon.png",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "package": "com.ufsm.AppEstat"
+    }
   }
 }
