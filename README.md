@@ -1,4 +1,4 @@
-# AppEstat
+# (ARM)2Stat
 Aplicativo de estatística descritiva sobre análise exploratória de dados.
 
 
@@ -10,4 +10,4 @@ Aplicativo de estatística descritiva sobre análise exploratória de dados.
 4. instale Android Studio
 5. crie e execute um emulador android
 6. npm install
-7. npm run android em um emulador
+7. npm run android

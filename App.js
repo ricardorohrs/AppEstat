@@ -16,10 +16,10 @@ export default class MainActivity extends Component {
   }
 
   AddItemsToArray = () => {
-      SampleArray.push(this.state.Holder.toString());
-      console.log('Valor adicionado!');
-      this.setState({SampleArray: SampleArray});
-      //Alert.alert(SampleArray.toString());
+    SampleArray.push(this.state.Holder.toString());
+    console.log('Valor adicionado!');
+    this.setState({SampleArray: SampleArray});
+    //Alert.alert(SampleArray.toString());
   }
 
   valores = () => {
@@ -28,7 +28,8 @@ export default class MainActivity extends Component {
 
   calculate = () => {
     let novo = SampleArray.toString().split(",");
-    const data = novo.sort((a,b)=>{
+    let filtered = novo.filter(function(e){ return e.replace(/(\r\n|\n|\r)/gm,"")});
+    const data = filtered.sort((a,b)=>{
       return a - b;
     });
 
@@ -61,34 +62,34 @@ export default class MainActivity extends Component {
     }
 
     do {
-    for (let i = ultimaIteracao; i <= data.length; i++ ) {
-      if (i===0) {
-        if (data[i] <= intervalos[intervaloAtual][1])
-          xi[intervaloAtual]++;
-        else	{
-          ultimaIteracao = i;
-          intervaloAtual++;
-          break;
-        }
-      } else if (i===data.length-1) {
-        if ( data[i] > intervalos[intervaloAtual][0] && data[i] <= intervalos[intervaloAtual][1])
-          xi[intervaloAtual]++;
-        else {
-          ultimaIteracao = i;
-          intervaloAtual++;
-          break;
-        }
-      } else {
-        if ( data[i] >= intervalos[intervaloAtual][0] && data[i] <= intervalos[intervaloAtual][1])
-          xi[intervaloAtual]++;
-        else {
-          ultimaIteracao = i;
-          intervaloAtual++;
-          break;
+      for (let i = ultimaIteracao; i <= data.length; i++ ) {
+        if (i===0) {
+          if (data[i] <= intervalos[intervaloAtual][1])
+            xi[intervaloAtual]++;
+          else	{
+            ultimaIteracao = i;
+            intervaloAtual++;
+            break;
+          }
+        } else if (i===data.length-1) {
+          if ( data[i] > intervalos[intervaloAtual][0] && data[i] <= intervalos[intervaloAtual][1])
+            xi[intervaloAtual]++;
+          else {
+            ultimaIteracao = i;
+            intervaloAtual++;
+            break;
+          }
+        } else {
+          if ( data[i] >= intervalos[intervaloAtual][0] && data[i] <= intervalos[intervaloAtual][1])
+            xi[intervaloAtual]++;
+          else {
+            ultimaIteracao = i;
+            intervaloAtual++;
+            break;
+          }
         }
       }
-    }
-    } while(intervaloAtual < intervalos.length);
+      } while(intervaloAtual < intervalos.length);  
 
     for (let i = 0; i < k; i++) {
       fr.push(xi[i]/data.length);
@@ -103,7 +104,6 @@ export default class MainActivity extends Component {
       }
     }
 
-    console.log('   ');
     console.log('xi', xi);
     console.log('Xi', Xi);
     console.log('fr', fr);
@@ -131,14 +131,7 @@ export default class MainActivity extends Component {
     SampleArray = [];
     this.setState({DataTable:[]});
   }
-
-/*   renderItem = ({ item }) => {
-    if (item.empty === true)
-      return <View/>;
-
-    return (<Text>{item.key}</Text>);
-  }; */
-
+  
  render() {
   const state = this.state;
    return (
@@ -150,6 +143,7 @@ export default class MainActivity extends Component {
               placeholder="Digite o valor"
               onChangeText={TextInputValue => this.setState({Holder: TextInputValue})}
               style={{textAlign: 'center', marginBottom: 6, height: 45}}
+              keyboardType={'numeric'}
           />
           <Button title="Adicionar valor" onPress={this.AddItemsToArray}/>
 
@@ -177,7 +171,7 @@ export default class MainActivity extends Component {
         </ScrollView>
 
         <View style={styles.botao}>
-         <Button title="Calcular Novamente" onPress={this.zerar}/>
+         <Button title="Excluir valores" onPress={this.zerar}/>
         </View>
 
         </View>

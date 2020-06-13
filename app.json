@@ -2,8 +2,8 @@
   "name": "(ARM)2Stat",
   "displayName": "(ARM)2Stat",
   "expo": {
-    "name": "AppEstat",
-    "slug": "AppEstat",
+    "name": "(ARM)2Stat",
+    "slug": "(ARM)2Stat",
     "version": "1.0.0",
     "platforms": [
       "ios",
@@ -11,7 +11,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./android/app/src/main/res/mipmap-hdpi/icon.png",
+    "icon": "./android/app/src/main/res/mipmap-xxhdpi/icon.png",
     "assetBundlePatterns": [
       "**/*"
     ],
